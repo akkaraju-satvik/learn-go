@@ -8,6 +8,8 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
+	"tudoo.app/cli/db"
+	"tudoo.app/cli/types"
 )
 
 var Heading = color.New(color.FgCyan, color.Bold).PrintlnFunc()
@@ -48,4 +50,31 @@ func Log(str interface{}) {
 	default:
 		fmt.Println(v)
 	}
+}
+
+func Insert() {
+	var args = os.Args[1:]
+	for i := range args {
+		Log(args[i])
+	}
+
+	var name string
+	var age int
+	var height float32
+
+	fmt.Print("Enter name: ")
+	name = ReadString()
+	fmt.Print("Enter age: ")
+	fmt.Scanln(&age)
+	fmt.Print("Enter height: ")
+	fmt.Scanln(&height)
+
+	satvik := types.CreatePerson(name, age, height)
+	var insertedName, insertedAge, err = db.InsertPerson(satvik)
+	if err != nil {
+		panic(err)
+	}
+	Heading("Inserted person:")
+	Log("Name: " + insertedName)
+	Log("Age: " + insertedAge)
 }
