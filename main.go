@@ -15,7 +15,7 @@ func main() {
 	auth0_url := "https://satvik.uk.auth0.com/oauth/device/code"
 	params := url.Values{}
 	params.Add("client_id", "28LESuEgj4TnYD68bgTfq3nEPMevJHS5")
-	params.Add("scope", "openid profile email")
+	params.Add("scope", "openid profile email offline_access")
 	payload := strings.NewReader(params.Encode())
 	req, _ := http.NewRequest("POST", auth0_url, payload)
 	req.Header.Add("content-type", "application/x-www-form-urlencoded")
@@ -28,14 +28,16 @@ func main() {
 	var result map[string]interface{}
 	json.Unmarshal([]byte(body), &result)
 	fmt.Printf("Please open the following link in the browser: %s\n\n", result["verification_uri_complete"])
-	tokenChan := make(chan string)
+	tokenChan := make(chan map[string]interface{})
 	fmt.Printf("Waiting for authorization...\n\n")
 	go pollToken(result["device_code"].(string), &tokenChan)
-	var token string = <-tokenChan
-	fmt.Printf("Your token is: %s\n", token)
+	var tokens map[string]interface{} = <-tokenChan
+	for key, value := range tokens {
+		fmt.Printf("%v: %v\n\n", key, value)
+	}
 }
 
-func pollToken(device_code string, tokenChan *chan string) {
+func pollToken(device_code string, tokenChan *chan map[string]interface{}) {
 	auth0_token_url := "https://satvik.uk.auth0.com/oauth/token"
 	token_params := url.Values{}
 	token_params.Add("client_id", "28LESuEgj4TnYD68bgTfq3nEPMevJHS5")
@@ -60,5 +62,10 @@ func pollToken(device_code string, tokenChan *chan string) {
 		pollToken(device_code, tokenChan)
 		return
 	}
-	*tokenChan <- token_result["id_token"].(string)
+	*tokenChan <- map[string]interface{}{
+		"access_token":  token_result["access_token"],
+		"id_token":      token_result["id_token"],
+		"refresh_token": token_result["refresh_token"],
+	}
+
 }
