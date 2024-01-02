@@ -8,8 +8,10 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
+	"github.com/go-playground/validator"
 )
 
+var Validate *validator.Validate
 var Heading = color.New(color.FgCyan, color.Bold).PrintlnFunc()
 
 func ReadString() string {
@@ -48,4 +50,8 @@ func Log(str interface{}) {
 	default:
 		fmt.Println(v)
 	}
+}
+
+func init() {
+	Validate = validator.New()
 }

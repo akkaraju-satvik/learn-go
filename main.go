@@ -4,34 +4,30 @@ import (
 	"fmt"
 	"os"
 
-	"tudoo.app/cli/db"
-	"tudoo.app/cli/types"
-	"tudoo.app/cli/utils"
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+
+	"github.com/akkaraju-satvik/learn-go/auth"
 )
 
 func main() {
-	var args = os.Args[1:]
-	for i := range args {
-		utils.Log(args[i])
-	}
-
-	var name string
-	var age int
-	var height float32
-
-	fmt.Print("Enter name: ")
-	name = utils.ReadString()
-	fmt.Print("Enter age: ")
-	fmt.Scanln(&age)
-	fmt.Print("Enter height: ")
-	fmt.Scanln(&height)
-
-	satvik := types.CreatePerson(name, age, height)
-	var insertedName, insertedAge, err = db.InsertPerson(satvik)
-	if err != nil {
-		panic(err)
-	}
-	utils.Heading("Inserted person:")
-	utils.Log("Name: " + insertedName)
-	utils.Log("Age: " + insertedAge)
+	godotenv.Load(".env")
+	fmt.Println(os.Getenv("xmx"))
+	router := gin.Default()
+	router.LoadHTMLGlob("static/*")
+	router.GET("/", func(c *gin.Context) {
+		c.HTML(200, "index.html", gin.H{
+			"title": "Satvik",
+		})
+	})
+	router.SetTrustedProxies([]string{"localhost"})
+	apiV1 := router.Group("/api/v1")
+	apiV1.GET("/health", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "Server is healthy",
+			"success": true,
+		})
+	})
+	auth.Routes(apiV1)
+	router.Run(":8080")
 }

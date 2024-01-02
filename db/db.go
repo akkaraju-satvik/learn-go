@@ -3,8 +3,9 @@ package db
 import (
 	"database/sql"
 
+	"github.com/akkaraju-satvik/learn-go/types"
+
 	_ "github.com/lib/pq"
-	"tudoo.app/cli/types"
 )
 
 var db, e = sql.Open("postgres", "user=postgres password=postgres dbname=postgres sslmode=disable port=3006")
