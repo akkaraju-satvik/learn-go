@@ -3,9 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>{{.title}}</title>
+  <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  404
+  <header>
+    <div class="container">
+      <div class="header__inner">
+        <div class="header__logo">
+          <img src="/assets/logo.svg" alt="logo">
+        </div>
+        <nav class="nav">
+          <a class="nav__link" href="/">Home</a>
+          <a class="nav__link" href="/about">About</a>
+          <a class="nav__link" href="/contacts">Contacts</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section__inner">
+          <h1 class="section__title">404</h1>
+          <p class="section__subtitle">Page not found</p>
+          <a class="section__link" href="/">Go back</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer__inner">
+        <p class="footer__text">© 2024. All rights reserved</p>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>
