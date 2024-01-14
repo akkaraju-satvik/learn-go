@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
-	"os"
+	"flag"
+	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -12,7 +12,11 @@ import (
 
 func main() {
 	godotenv.Load(".env")
-	fmt.Println(os.Getenv("xmx"))
+	listenAddr := flag.String("listenAddr", "", "HTTP listen address")
+	flag.Parse()
+	if *listenAddr == "" {
+		log.Fatal("Listen address is required")
+	}
 	router := gin.Default()
 	router.SetTrustedProxies([]string{"localhost"})
 	router.LoadHTMLGlob("static/*.html")
@@ -37,5 +41,5 @@ func main() {
 		})
 	})
 	auth.Routes(apiV1)
-	router.Run(":8080")
+	router.Run(":" + *listenAddr)
 }
