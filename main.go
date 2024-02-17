@@ -15,17 +15,17 @@ func main() {
 		utils.Log(args[i])
 	}
 
-	var name string
 	var age int
 	var height float32
 
 	fmt.Print("Enter name: ")
-	name = utils.ReadString()
+	name := utils.ReadString()
 	fmt.Print("Enter age: ")
 	fmt.Scanln(&age)
 	fmt.Print("Enter height: ")
 	fmt.Scanln(&height)
 
+	db.Connect()
 	satvik := types.CreatePerson(name, age, height)
 	var insertedName, insertedAge, err = db.InsertPerson(satvik)
 	if err != nil {
